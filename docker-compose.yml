@@ -1,20 +1,23 @@
 version: '3'
  
 services:
-  reverseproxy:
-    build: nginx
-    image: nginx-server
-    container_name: nginx-server-container
+  frontend:
+    restart: unless-stopped
+    image: staticfloat/nginx-certbot
     ports:
-      # port to access: internal port
-      - 2345:8080
-    restart: always
+        - 80:80/tcp
+        - 443:443/tcp
+    environment:
+        CERTBOT_EMAIL: michael.cu@iainnovations.com
     networks:
       - backend
+    volumes:
+      - ./conf.d:/etc/nginx/user.conf.d:ro
+      - letsencrypt:/etc/letsencrypt
 
   express:
     depends_on:
-      - reverseproxy
+      - frontend
     build:
       context: express
       args:
@@ -29,6 +32,8 @@ services:
     networks:
       - backend
 
+volumes:
+    letsencrypt:
 networks:
   backend:
     driver: "bridge"
