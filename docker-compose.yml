@@ -1,14 +1,14 @@
-version: '3'
- 
+version: "3"
+
 services:
   frontend:
     restart: unless-stopped
     image: staticfloat/nginx-certbot
     ports:
-        - 80:80/tcp
-        - 443:443/tcp
+      - 80:80/tcp
+      - 443:443/tcp
     environment:
-        CERTBOT_EMAIL: michael.cu@iainnovations.com
+      CERTBOT_EMAIL: michael.cu@iainnovations.com
     networks:
       - backend
     volumes:
@@ -21,9 +21,9 @@ services:
     build:
       context: express
       args:
-       - dir=/opt/example.com/
-       - port=3000
-       - env=dev
+        - dir=/opt/example.com/
+        - port=3000
+        - env=dev
     image: express-server
     container_name: express-server-container
     volumes:
@@ -33,10 +33,9 @@ services:
       - backend
 
 volumes:
-    letsencrypt:
+  letsencrypt:
+  express:
+
 networks:
   backend:
     driver: "bridge"
-volumes:
-  express:
-    driver: 'local'
